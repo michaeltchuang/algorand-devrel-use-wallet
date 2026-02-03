@@ -49,7 +49,6 @@ export function Connect() {
         throw new Error('[App] No active account')
       }
 
-      const atc = new algosdk.AtomicTransactionComposer()
       const suggestedParams = await algodClient.getTransactionParams().do()
 
       const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
@@ -59,18 +58,46 @@ export function Connect() {
         suggestedParams
       })
 
-      atc.addTransaction({ txn: transaction, signer: transactionSigner })
-
       console.info(`[App] Sending transaction...`, transaction)
 
       setIsSending(true)
 
-      const result = await atc.execute(algodClient, 4)
+      // Sign the transaction
+      const signedTxns = await transactionSigner([transaction], [0])
 
-      console.info(`[App] ✅ Successfully sent transaction!`, {
-        confirmedRound: result.confirmedRound,
-        txIDs: result.txIDs
-      })
+      console.info(`[App] Signed transaction, size: ${signedTxns[0]?.length} bytes`)
+
+      // Check if this is a Falcon24 signature (much larger than standard Ed25519)
+      // Ed25519 signed txns are ~200-300 bytes, Falcon24 are 3000+ bytes
+      const isFalconSignature = signedTxns[0] && signedTxns[0].length > 1000
+
+      if (isFalconSignature) {
+        console.info(`[App] Detected Falcon24 signature, sending directly...`)
+        // Send directly to bypass AtomicTransactionComposer's signature validation
+        const sendResponse = await algodClient.sendRawTransaction(signedTxns[0]!).do()
+        console.info(`[App] Send response:`, sendResponse)
+
+        // Extract txId - note the property is 'txid' (lowercase)
+        const txId = typeof sendResponse === 'string' ? sendResponse : sendResponse.txid
+        console.info(`[App] Transaction ID:`, txId)
+
+        const result = await algosdk.waitForConfirmation(algodClient, txId, 4)
+
+        console.info(`[App] ✅ Successfully sent Falcon24 transaction!`, {
+          confirmedRound: result.confirmedRound,
+          txID: txId
+        })
+      } else {
+        // Use AtomicTransactionComposer for standard Ed25519 signatures
+        const atc = new algosdk.AtomicTransactionComposer()
+        atc.addTransaction({ txn: transaction, signer: transactionSigner })
+        const result = await atc.execute(algodClient, 4)
+
+        console.info(`[App] ✅ Successfully sent transaction!`, {
+          confirmedRound: result.confirmedRound,
+          txIDs: result.txIDs
+        })
+      }
     } catch (error) {
       console.error('[App] Error signing transaction:', error)
     } finally {

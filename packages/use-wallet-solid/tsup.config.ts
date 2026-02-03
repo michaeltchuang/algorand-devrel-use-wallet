@@ -40,5 +40,13 @@ export default defineConfig((config) => {
     preset.writePackageJson(package_fields)
   }
 
-  return preset.generateTsupOptions(parsed_options)
+  const tsupOptions = preset.generateTsupOptions(parsed_options)
+
+  // Externalize cbor packages that depend on Node.js built-ins
+  for (const options of tsupOptions) {
+    options.external = options.external || []
+    options.external.push('cbor', 'cbor-x')
+  }
+
+  return tsupOptions
 })

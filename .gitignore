@@ -4,6 +4,7 @@ dist
 *.code-workspace
 .nvmrc
 coverage
+.idea/*
 
 # Playwright
 **/test-results/

@@ -7,6 +7,7 @@
  */
 export const webpackFallback = {
   '@agoralabs-sh/avm-web-provider': false,
+  '@algorandecosystem/liquid-auth-use-wallet-client': false,
   '@blockshake/defly-connect': false,
   '@magic-ext/algorand': false,
   '@perawallet/connect': false,

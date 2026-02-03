@@ -21,7 +21,7 @@ const wallets: SupportedWallet[] = [
     options: { projectId: 'fcfde0713d43baa0d23be0773c80a72b' }
   },
   {
-    id: WalletId.WALLETCONNECT,
+    id: WalletId.BIATEC,
     options: {
       skin: 'biatec',
       projectId: 'fcfde0713d43baa0d23be0773c80a72b'
@@ -29,6 +29,14 @@ const wallets: SupportedWallet[] = [
   },
   WalletId.KMD,
   WalletId.KIBISIS,
+  {
+    id: WalletId.LIQUID_ALGORAND_ECOSYSTEM,
+    options: {
+      origin: 'https://liquid-auth-api.pg.nodely.dev',
+      RTC_config_username: 'liquid-auth',
+      RTC_config_credential: 'sqmcP4MiTKMT4TGEDSk9jgHY'
+    }
+  },
   WalletId.LUTE,
   {
     id: WalletId.MAGIC,

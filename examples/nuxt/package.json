@@ -12,6 +12,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@algorandecosystem/liquid-auth-use-wallet-client": "github:algorandecosystem/liquid-auth-use-wallet-client#falcon24-support",
     "@blockshake/defly-connect": "^1.2.1",
     "@noble/ed25519": "3.0.0",
     "@perawallet/connect": "^1.4.1",
