@@ -96,8 +96,11 @@ export class LiquidWallet extends BaseWallet {
 
   public disconnect = async (): Promise<void> => {
     this.logger.info('Disconnecting...')
+    // Don't throw if auth client doesn't exist - just clean up state
     if (!this.authClient) {
-      throw new Error('No auth client to disconnect')
+      this.logger.info('No auth client to disconnect, cleaning up state...')
+      this.onDisconnect()
+      return
     }
     await this.authClient.disconnect()
 
