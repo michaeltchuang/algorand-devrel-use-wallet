@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@agoralabs-sh/avm-web-provider": "1.7.0",
-    "@algorandecosystem/liquid-auth-use-wallet-client": "github:algorandecosystem/liquid-auth-use-wallet-client#falcon24-support",
+    "@algorandecosystem/liquid-auth-use-wallet-client": "1.5.0",
     "@blockshake/defly-connect": "1.2.1",
     "@magic-ext/algorand": "24.4.2",
     "@magic-sdk/provider": "29.5.0",
